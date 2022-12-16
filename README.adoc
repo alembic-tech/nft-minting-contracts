@@ -1,0 +1,17 @@
+:toc:
+:toc-placement!:
+:source-highlighter: pygments
+:stylesheet: ./doc/themes/asciidoctor-alembic.css
+
+= Alembic NFT minting contracts
+
+This repositories is a collection of various NFT minting contracts templates you can
+freely use for your own needs.
+
+Documentation is available here: https://alembic-tech.github.io/nft-minting-contracts/
+
+toc::[]
+
+== ERC1155 Minting Contracts
+
+include::doc/ERC1155VoucherMinter.adoc[]

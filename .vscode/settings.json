@@ -1,0 +1,4 @@
+{
+    "asciidoc.preview.style": "./doc/themes/asciidoctor-alembic.css",
+    "asciidoc.preview.useEditorStyle": false
+}
