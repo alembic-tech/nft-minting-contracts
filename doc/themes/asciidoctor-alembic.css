@@ -17,7 +17,7 @@ h1, h2, h3, #toctitle {
 	font-family: 'Playfair Display',-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.fa.icon-note {
+.fa.icon-note, .fa.icon-warning {
 	font-family: 'Playfair Display',-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size: 18px !important;
 	line-height: auto !important;
@@ -25,4 +25,8 @@ h1, h2, h3, #toctitle {
 .fa.icon-note::before {
 	color: #262626 !important;
 	content: 'NOTE' !important;
+}
+.fa.icon-warning::before {
+	color: #262626 !important;
+	content: 'WARNING' !important;
 }

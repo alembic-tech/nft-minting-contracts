@@ -33,6 +33,12 @@ include::../test/ERC721MerkleTreeMinter.spec.ts[tag=merkle-tree-computation-exam
 ----
 
 Then compute the Merkle Tree:
+
+WARNING: You will need to keep track of the merkle proofs for each user address in the exact
+same order of your leaves array. +
+It is quite common to either embed a JSON file in your dApp or store such data a database and
+have your dApp fetch the relevant data for the connected user.
+
 [source,typescript,line-comment=//]
 ----
 include::../test/ERC721MerkleTreeMinter.spec.ts[tag=merkle-tree-computation,indent=0]
@@ -40,6 +46,7 @@ include::../test/ERC721MerkleTreeMinter.spec.ts[tag=merkle-tree-computation,inde
 
 NOTE: The `deployWhitelistedMinter` and `deployMinterWithLeaves` functions included in the
 test suite are handy if you want to do this in your scripts.
+
 
 Finally here is an example of call to have your user mint his NFTs:
 [source,typescript,line-comment=//]
@@ -52,7 +59,3 @@ include::../test/ERC721MerkleTreeMinter.spec.ts[tag=merkle-tree-mint-example,ind
 <4> the nonce
 <5> the merkle tree proofs
 <6> purchase price
-
-As you need to give the Merkle Tree proofs and nonces, you usually need to store them somewhere
-after computing the Merkle Tree, so that your frontend can retrieve them from the connected user
-on your dApp.
