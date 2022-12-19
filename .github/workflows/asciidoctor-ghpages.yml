@@ -4,7 +4,7 @@ name: GitHub Pages Publish
 # events but only for the master branch
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, feat/erc721-wl-minter ]
   pull_request:
     branches: [ master, main ]
 

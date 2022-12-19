@@ -10,7 +10,7 @@
 		"test": "npx hardhat test",
 		"coverage": "npx hardhat coverage",
 		"lint": "prettier --check \"contracts/**/*.{sol,ts,js}\"",
-		"prettier": "prettier --write \"contracts/**/*.{sol,ts,js}\" \"deploy/**.ts\"",
+		"prettier": "prettier --write \"contracts/**/*.{sol,ts,js}\" \"test/**.ts\"",
 		"gas": "cross-env REPORT_GAS=true hardhat test",
 		"deploy:devnet": "npx hardhat --network matic rental:deploy --fees-collector 0xf845b2501A69eF480aC577b99e96796c2B6AE88E"
 	},
