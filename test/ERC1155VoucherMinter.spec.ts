@@ -1,6 +1,11 @@
 import { deployments, ethers } from "hardhat"
 import { BigNumberish } from "ethers"
-import { ERC1155Test, ERC1155Test__factory, ERC1155VoucherMinter, ERC1155VoucherMinter__factory } from "../artifacts/typechain"
+import {
+	ERC1155Test,
+	ERC1155Test__factory,
+	ERC1155VoucherMinter,
+	ERC1155VoucherMinter__factory,
+} from "../artifacts/typechain"
 
 const { BigNumber } = ethers
 const { expect } = require("chai")
@@ -45,8 +50,7 @@ describe("ERC1155VoucherMinter", () => {
 		// end::backend-task[]
 
 		// mint nfts
-		await expect(minter.connect(user).mint({ ...request, signature }))
-		  .to.emit(erc1155, "TransferSingle")
+		await expect(minter.connect(user).mint({ ...request, signature })).to.emit(erc1155, "TransferSingle")
 
 		// check user balance
 		expect(await erc1155.balanceOf(user.address, tokenId)).to.equal(quantity)
