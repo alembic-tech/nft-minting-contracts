@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<title>Alembic NFT minting contracts</title>
+<style>
+@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
+@import "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap";
+@import "https://cdn.jsdelivr.net/gh/asciidoctor/asciidoctor@2.0/data/stylesheets/asciidoctor-default.css";
+
+body {
+	background-color: #FCF9F1;
+	font-family: 'Playfair Display',-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+h1 {
+	font-size: 5em;
+	font-weight: 900;
+}
+
+h1, h2, h3, #toctitle {
+	color: #262626 !important;
+	font-family: 'Playfair Display',-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.fa.icon-note, .fa.icon-warning {
+	font-family: 'Playfair Display',-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 18px !important;
+	line-height: auto !important;
+}
+.fa.icon-note::before {
+	color: #262626 !important;
+	content: 'NOTE' !important;
+}
+.fa.icon-warning::before {
+	color: #262626 !important;
+	content: 'WARNING' !important;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #408080; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666666 } /* Operator */
+pre.pygments .tok-ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #408080; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #BC7A00 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #408080; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #408080; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-gr { color: #FF0000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #00A000 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #888888 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #7D9029 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #880000 } /* Name.Constant */
+pre.pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+pre.pygments .tok-ni { color: #999999; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #0000FF } /* Name.Function */
+pre.pygments .tok-nl { color: #A0A000 } /* Name.Label */
+pre.pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #BB6688 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="header">
+<h1>Alembic NFT minting contracts</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This repository is a collection of various NFT minting contracts templates you can
+freely use for your own needs.</p>
+</div>
+<div class="paragraph">
+<p>Documentation: <a href="https://alembic-tech.github.io/nft-minting-contracts/" class="bare">https://alembic-tech.github.io/nft-minting-contracts/</a><br>
+PDF version: <a href="https://alembic-tech.github.io/nft-minting-contracts/ebook.pdf" class="bare">https://alembic-tech.github.io/nft-minting-contracts/ebook.pdf</a></p>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_erc721_minting_contracts">ERC721 Minting Contracts</a>
+<ul class="sectlevel2">
+<li><a href="#_whitelist_with_merkle_tree">Whitelist with Merkle Tree</a></li>
+</ul>
+</li>
+<li><a href="#_erc1155_minting_contracts">ERC1155 Minting Contracts</a>
+<ul class="sectlevel2">
+<li><a href="#_controlled_by_eip_712_signatures">Controlled by EIP-712 signatures</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_erc721_minting_contracts">ERC721 Minting Contracts</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_whitelist_with_merkle_tree">Whitelist with Merkle Tree</h3>
+<div class="paragraph">
+<p><a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/contracts/erc721/ERC721MerkleTreeMinter.sol">ERC721MerkleTreeMinter</a>
+is a minter contract expected to work in tandem with almost any ERC721 contract which implements the
+<a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/contracts/erc721/IERC721Mintable.sol">IERC721Mintable</a>
+interface.</p>
+</div>
+<div class="paragraph">
+<p>The <code>IERC721Mintable</code> interface is pretty basic and a typical ERC721 mint function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="solidity"><span></span><span class="tok-kt">function</span><span class="tok-w"> </span><span class="tok-nv">mint</span><span class="tok-p">(</span><span class="tok-kt">address</span><span class="tok-w"> </span><span class="tok-nv">to</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-kt">external</span><span class="tok-p">;</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A sample ERC721 contract, <a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/contracts/test/ERC721Test.sol">ERC721Test</a> is provided,
+based on OpenZeppelin roles, and restricting mints to only contracts having the <code>MINTER_ROLE</code>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/test/ERC721MerkleTreeMinter.spec.ts">ERC721MerkleTreeMinter.spec.ts</a>
+contains examples on how to use <code>ERC721MerkleTreeMinter</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ERC721MerkleTreeMinter</code> contract is initialized with a Merkle Tree root, computed from leaves
+having the following structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="typescript"><span></span><span class="tok-kd">const</span> <span class="tok-nx">leafSignature</span>: <span class="tok-kt">LeafSignature</span> <span class="tok-o">=</span> <span class="tok-p">[</span>
+	<span class="tok-p">{</span> <span class="tok-kr">type</span><span class="tok-o">:</span> <span class="tok-s2">&quot;address&quot;</span><span class="tok-p">,</span> <span class="tok-nx">name</span><span class="tok-o">:</span> <span class="tok-s2">&quot;address&quot;</span> <span class="tok-p">},</span> <i class="conum" data-value="1"></i><b>(1)</b>
+	<span class="tok-p">{</span> <span class="tok-kr">type</span><span class="tok-o">:</span> <span class="tok-s2">&quot;uint256&quot;</span><span class="tok-p">,</span> <span class="tok-nx">name</span><span class="tok-o">:</span> <span class="tok-s2">&quot;quantity&quot;</span> <span class="tok-p">},</span> <i class="conum" data-value="2"></i><b>(2)</b>
+	<span class="tok-p">{</span> <span class="tok-kr">type</span><span class="tok-o">:</span> <span class="tok-s2">&quot;uint256&quot;</span><span class="tok-p">,</span> <span class="tok-nx">name</span><span class="tok-o">:</span> <span class="tok-s2">&quot;nonce&quot;</span> <span class="tok-p">},</span> <i class="conum" data-value="3"></i><b>(3)</b>
+<span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Address of the whitelisted user</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Maximum quantity of NFTs the whitelisted user is allowed to mint</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>A nonce allowing to have a user included more than once in the tree if need be</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Initialize your Merkle Tree with an array of <code>LeafSourceObject</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="typescript"><span></span><span class="tok-c1">// compute merkle tree with user1 in the whitelist twice with different quantities</span>
+<span class="tok-kd">const</span> <span class="tok-nx">leaves</span>: <span class="tok-kt">LeafSourceObject</span><span class="tok-p">[]</span> <span class="tok-o">=</span> <span class="tok-p">[</span>
+	<span class="tok-p">{</span> <span class="tok-nx">address</span>: <span class="tok-kt">user1.address</span><span class="tok-p">,</span> <span class="tok-nx">quantity</span>: <span class="tok-kt">1</span><span class="tok-p">,</span> <span class="tok-nx">nonce</span>: <span class="tok-kt">123</span> <span class="tok-p">},</span>
+	<span class="tok-p">{</span> <span class="tok-nx">address</span>: <span class="tok-kt">user1.address</span><span class="tok-p">,</span> <span class="tok-nx">quantity</span>: <span class="tok-kt">2</span><span class="tok-p">,</span> <span class="tok-nx">nonce</span>: <span class="tok-kt">456</span> <span class="tok-p">},</span>
+<span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then compute the Merkle Tree:</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You will need to keep track of the merkle proofs for each user address in the exact
+same order of your leaves array.<br>
+It is quite common to either embed a JSON file in your dApp or store such data a database and
+have your dApp fetch the relevant data for the connected user.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="typescript"><span></span><span class="tok-c1">// compute merkle tree</span>
+<span class="tok-kd">const</span> <span class="tok-nx">merkleTree</span> <span class="tok-o">=</span> <span class="tok-ow">new</span> <span class="tok-nx">WMerkleTree</span><span class="tok-p">(</span><span class="tok-nx">leaves</span><span class="tok-p">,</span> <span class="tok-nx">leafSignature</span><span class="tok-p">)</span>
+<span class="tok-kd">const</span> <span class="tok-nx">merkleRoot</span> <span class="tok-o">=</span> <span class="tok-nx">merkleTree</span><span class="tok-p">.</span><span class="tok-nx">getHexRoot</span><span class="tok-p">()</span>
+<span class="tok-c1">// return user merkle tree proofs for each leaf</span>
+<span class="tok-k">return</span> <span class="tok-nx">leaves</span><span class="tok-p">.</span><span class="tok-nx">map</span><span class="tok-p">((</span><span class="tok-nx">leaf</span><span class="tok-p">,</span> <span class="tok-nx">index</span><span class="tok-p">)</span> <span class="tok-p">=&gt;</span> <span class="tok-nx">merkleTree</span><span class="tok-p">.</span><span class="tok-nx">getHexProof</span><span class="tok-p">(</span><span class="tok-nx">index</span><span class="tok-p">))</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>deployWhitelistedMinter</code> and <code>deployMinterWithLeaves</code> functions included in the
+test suite are handy if you want to do this in your scripts.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally here is an example of call to have your user mint his NFTs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="typescript"><span></span><span class="tok-kd">const</span> <span class="tok-nx">tx</span> <span class="tok-o">=</span> <span class="tok-k">await</span> <span class="tok-nx">minter</span><span class="tok-p">.</span><span class="tok-nx">connect</span><span class="tok-p">(</span><span class="tok-nx">user1</span><span class="tok-p">).</span><span class="tok-nx">mint</span><span class="tok-p">(</span>
+	<span class="tok-nx">user1</span><span class="tok-p">.</span><span class="tok-nx">address</span><span class="tok-p">,</span> <i class="conum" data-value="1"></i><b>(1)</b>
+	<span class="tok-mf">1</span><span class="tok-p">,</span> <i class="conum" data-value="2"></i><b>(2)</b>
+	<span class="tok-mf">1</span><span class="tok-p">,</span> <i class="conum" data-value="3"></i><b>(3)</b>
+	<span class="tok-mf">123</span><span class="tok-p">,</span> <i class="conum" data-value="4"></i><b>(4)</b>
+	<span class="tok-nx">proofs</span><span class="tok-p">[</span><span class="tok-mf">0</span><span class="tok-p">],</span> <i class="conum" data-value="5"></i><b>(5)</b>
+	<span class="tok-p">{</span> <span class="tok-nx">value</span>: <span class="tok-kt">price</span> <span class="tok-p">}</span> <i class="conum" data-value="6"></i><b>(6)</b>
+<span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>address of the user</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>quantity to mint</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>max quantity mintable by that user</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>the nonce</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>the merkle tree proofs</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>purchase price</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_erc1155_minting_contracts">ERC1155 Minting Contracts</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_controlled_by_eip_712_signatures">Controlled by EIP-712 signatures</h3>
+<div class="paragraph">
+<p><a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/contracts/erc1155/ERC1155VoucherMinter.sol">ERC1155VoucherMinter</a>
+is a minter contract expected to work in tandem with almost any ERC1155 contract which implements the
+<a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/contracts/erc1155/IERC1155Mintable.sol">IERC1155Mintable</a>
+interface.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This minting approach is particularly useful when you have some kind of backends
+controlling a wallet allowed to sign <code>ERC1155VoucherMinter.MintRequest</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>IERC1155Mintable</code> interface is pretty basic and a typical ERC1155 mint function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="solidity"><span></span><span class="tok-kt">function</span><span class="tok-w"> </span><span class="tok-nv">mint</span><span class="tok-p">(</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-kt">address</span><span class="tok-w"> </span><span class="tok-nv">to</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-kt">uint256</span><span class="tok-w"> </span><span class="tok-nv">id</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-kt">uint256</span><span class="tok-w"> </span><span class="tok-nv">amount</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-kt">bytes</span><span class="tok-w"> </span><span class="tok-nv">memory</span><span class="tok-w"> </span>data<span class="tok-w"></span>
+<span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-kt">external</span><span class="tok-p">;</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A sample ERC1155 contract, <a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/contracts/test/ERC1155Test.sol">ERC1155Test</a> is provided,
+based on OpenZeppelin roles, and restricting mints to only contracts having the <code>MINTER_ROLE</code>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/test/ERC1155VoucherMinter.spec.ts">ERC1155VoucherMinter.spec.ts</a>
+contains examples on how to use <code>ERC1155VoucherMinter</code>.</p>
+</div>
+<div class="paragraph">
+<p>From your backend, sign a mint request, using the provided
+<a href="https://github.com/alembic-tech/nft-minting-contracts/blob/main/test/ERC1155VoucherMinter.spec.ts#L147">getTypedRequest</a> function.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="typescript"><span></span><span class="tok-c1">// sign request to mint</span>
+<span class="tok-kd">const</span> <span class="tok-p">{</span> <span class="tok-nx">domain</span><span class="tok-p">,</span> <span class="tok-nx">types</span><span class="tok-p">,</span> <span class="tok-nx">request</span> <span class="tok-p">}</span> <span class="tok-o">=</span> <span class="tok-k">await</span> <span class="tok-nx">getTypedRequest</span><span class="tok-p">(</span><span class="tok-nx">minter</span><span class="tok-p">.</span><span class="tok-nx">address</span><span class="tok-p">,</span> <span class="tok-nx">user</span><span class="tok-p">.</span><span class="tok-nx">address</span><span class="tok-p">,</span> <span class="tok-nx">tokenId</span><span class="tok-p">,</span> <span class="tok-nx">quantity</span><span class="tok-p">,</span> <span class="tok-nx">nonce</span><span class="tok-p">)</span>
+<span class="tok-kd">const</span> <span class="tok-nx">signature</span> <span class="tok-o">=</span> <span class="tok-k">await</span> <span class="tok-nx">operator</span><span class="tok-p">.</span><span class="tok-nx">_signTypedData</span><span class="tok-p">(</span><span class="tok-nx">domain</span><span class="tok-p">,</span> <span class="tok-nx">types</span><span class="tok-p">,</span> <span class="tok-nx">request</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In your dApp, to have the user to send the mint transaction, using Ethers:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Such transactions can be relayed if you want.<br>
+Any wallet can send this transaction.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="typescript"><span></span><span class="tok-kd">const</span> <span class="tok-p">{</span> <span class="tok-nx">domain</span><span class="tok-p">,</span> <span class="tok-nx">types</span><span class="tok-p">,</span> <span class="tok-nx">request</span> <span class="tok-p">}</span> <span class="tok-o">=</span> <span class="tok-k">await</span> <span class="tok-nx">getTypedRequest</span><span class="tok-p">(</span><span class="tok-nx">minter</span><span class="tok-p">.</span><span class="tok-nx">address</span><span class="tok-p">,</span> <span class="tok-nx">user</span><span class="tok-p">.</span><span class="tok-nx">address</span><span class="tok-p">,</span> <span class="tok-nx">tokenId</span><span class="tok-p">,</span> <span class="tok-nx">quantity</span><span class="tok-p">,</span> <span class="tok-nx">nonce</span><span class="tok-p">)</span>
+<span class="tok-c1">// TODO: make your backend provide the previously generated `signature`</span>
+<span class="tok-kd">const</span> <span class="tok-nx">tx</span> <span class="tok-o">=</span> <span class="tok-k">await</span> <span class="tok-nx">minter</span><span class="tok-p">.</span><span class="tok-nx">mint</span><span class="tok-p">({</span> <span class="tok-p">...</span><span class="tok-nx">request</span><span class="tok-p">,</span> <span class="tok-nx">signature</span> <span class="tok-p">})</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2022-12-20 10:14:24 UTC
+</div>
+</div>
+</body>
+</html>
